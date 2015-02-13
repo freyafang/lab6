@@ -9,7 +9,7 @@ $(document).ready(function() {
  * Function that is called when the document is ready.
  */
 function initializePage() {
-	$('.project a').click(addProjectDetails);
+	$.get("/project/1", addProjectDetails);
 
 	$('#colorBtn').click(randomizeColors);
 }
@@ -22,13 +22,29 @@ function addProjectDetails(e) {
 	e.preventDefault();
 
 	// Get the div ID, e.g., "project3"
-	var projectID = $(this).closest('.project').attr('id');
+	var projectID = $closest('.project').attr('id');
 	// get rid of 'project' from the front of the id 'project3'
 	var idNumber = projectID.substr('project'.length);
+	var detail = projectID.find('.details');
+	$(detail).click(function(){
+  		$(this).prev().html("foo");
+	});
+
 
 	console.log("User clicked on project " + idNumber);
-}
+	$.get("/project/" + idNumber, addProjectResults);
+	console.log("/project/" + idNumber);
 
+}
+function callBackFn (result) {
+	var colors = result['colors'];
+
+	$('body').css('background-color', colors[0]);
+	$('.thumbnail').css('background-color', colors[1]);
+	$('h1, h2, h3, h4, h5, h5').css('color', colors[2]);
+	$('p').css('color', colors[3]);
+	$('.project img').css('opacity', .75);
+}
 /*
  * Make an AJAX call to retrieve a color palette for the site
  * and apply it
